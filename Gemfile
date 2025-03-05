@@ -52,6 +52,11 @@ group :development, :test do
   gem 'debug', platforms: %i[ mri windows ]
   gem 'rubocop-rails', '~> 2.30'
   gem 'rspec-rails'
+  gem 'factory_bot_rails'
+end
+
+group :test do
+  gem 'shoulda-matchers'
 end
 
 group :development do
