@@ -64,3 +64,5 @@ group :development do
 end
 
 gem 'rubocop-rails', '~> 2.30'
+
+gem "devise", "~> 4.9"
