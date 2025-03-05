@@ -103,6 +103,11 @@ GEM
     diff-lcs (1.6.0)
     drb (2.2.1)
     erubi (1.13.1)
+    factory_bot (6.5.1)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.4.4)
+      factory_bot (~> 6.5)
+      railties (>= 5.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.7)
@@ -262,6 +267,8 @@ GEM
       rubocop-ast (>= 1.38.0, < 2.0)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    shoulda-matchers (6.4.0)
+      activesupport (>= 5.2.0)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -320,6 +327,7 @@ DEPENDENCIES
   bootsnap
   debug
   devise (~> 4.9)
+  factory_bot_rails
   importmap-rails
   jbuilder
   pg (~> 1.1)
@@ -327,6 +335,7 @@ DEPENDENCIES
   rails (~> 7.1.5, >= 7.1.5.1)
   rspec-rails
   rubocop-rails (~> 2.30)
+  shoulda-matchers
   sprockets-rails
   stimulus-rails
   tailwindcss-rails
