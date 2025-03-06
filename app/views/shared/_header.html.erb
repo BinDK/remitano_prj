@@ -13,7 +13,7 @@
       <div class="flex items-center">
         <% if user_signed_in? %>
           <div class="flex items-center space-x-4">
-            <%= link_to "Share Video", '', class: "custom-btn submit-btn" %>
+            <%= link_to "Share Video", new_video_path, class: "custom-btn submit-btn" %>
             <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "custom-btn logout-btn" %>
           </div>
         <% else %>

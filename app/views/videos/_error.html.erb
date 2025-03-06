@@ -1,0 +1,15 @@
+<div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-md">
+  <div class="flex">
+    <div class="flex-shrink-0">
+      <%= render partial: "icons/x-mark" %>
+    </div>
+    <div class="ml-3">
+      <h3 class="text-sm font-medium text-red-700">There were <%= pluralize(video.errors.count, "error") %> with your submission:</h3>
+      <ul class="mt-2 list-disc list-inside text-sm text-red-700">
+        <% video.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
