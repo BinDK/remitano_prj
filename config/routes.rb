@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  post 'users/sign_in_or_sign_up', to: 'users#sign_in_or_sign_up'
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
