@@ -1,0 +1,31 @@
+<header class="bg-white shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      <div class="flex-shrink-0 flex items-center">
+        <div class="font-bold text-xl text-indigo-600">
+          <%= link_to root_path, class: "flex items-center" do %>
+            <%= render partial: 'icons/house' %>
+            <span class="ml-2">Video Sharing Platform</span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="flex items-center">
+        <% if user_signed_in? %>
+          <div class="flex items-center space-x-4">
+            <%= link_to "Share Video", '', class: "custom-btn submit-btn" %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "custom-btn logout-btn" %>
+          </div>
+        <% else %>
+          <div class="flex space-x-4 items-end">
+            <%= form_with(url: users_sign_in_or_sign_up_path, scope: :user, html: { class: "flex items-end space-x-2" }) do |f| %>
+              <%= f.email_field :email, placeholder: "Email", class: "custom-input", required: true %>
+              <%= f.password_field :password, placeholder: "Password", class: "custom-input", required: true %>
+              <%= f.submit "Login / Register", class: "custom-btn submit-btn" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</header>

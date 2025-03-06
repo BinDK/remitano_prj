@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+
+@layer components {
+  .custom-input {
+    @apply block min-w-0 border border-gray-500 rounded-lg grow py-1.5 pr-3 pl-1
+      text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6;
+  }
+
+  .custom-btn {
+    @apply inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md focus:outline-none
+      focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer;
+  }
+
+  .submit-btn {
+    @apply border-transparent shadow-sm text-white bg-indigo-600 hover:bg-indigo-700;
+  }
+
+  .logout-btn {
+    @apply border-gray-300 text-gray-700 bg-white hover:bg-gray-50;
+  }
+}
