@@ -1,0 +1,9 @@
+<div class="bg-white shadow overflow-hidden sm:rounded-lg mb-4">
+  <div class="px-4 py-5 sm:px-6">
+    <h2 class="text-lg font-medium text-gray-900">Explore Community Favorites</h2>
+    <p class="mt-1 max-w-2xl text-sm text-gray-500">Discover the best videos shared by our awesome community!</p>
+  </div>
+</div>
+
+<%= render "videos", videos: @videos %>
+<%= render partial: 'shared/no_resource' if @videos.empty? %>

@@ -1,0 +1,23 @@
+<div class="bg-white p-8 rounded-lg shadow-lg  mx-auto">
+  <%= form_with(url: videos_path, scope: video, local: true, class: "space-y-6") do |form| %>
+    <% if video.errors.any? %>
+      <%= render "error", video: video %>
+    <% end %>
+
+    <div>
+      <%= form.label :url, "YouTube Video URL", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <div class="mt-1">
+        <%= form.text_field :url, class: "custom-input w-full px-4 py-3",
+          placeholder: "https://www.youtube.com/watch?v=..." %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500">
+        Enter a valid YouTube URL (youtube.com, youtu.be, or youtube.com/shorts)
+      </p>
+    </div>
+
+    <div class="flex justify-end space-x-4 mt-8">
+      <%= link_to "Cancel", videos_path, class: "custom-btn logout-btn font-bold" %>
+      <%= form.submit "Subnmit", class: "custom-btn submit-btn font-bold" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,11 @@
+<div class="bg-white p-6 rounded-lg shadow-md text-center mt-4">
+  <h3 class="text-lg font-medium text-gray-900">No videos shared yet</h3>
+  <p class="mt-2 text-sm text-gray-500">Be the first to share an interesting YouTube video!</p>
+  <% if user_signed_in? %>
+    <div class="mt-4">
+      <%= link_to "Share a video", new_video_path, class: "custom-btn submit-btn" %>
+    </div>
+  <% else %>
+    <p class="mt-4 text-sm text-gray-500">Please log in to share videos</p>
+  <% end %>
+</div>
