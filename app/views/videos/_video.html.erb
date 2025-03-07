@@ -1,0 +1,26 @@
+<div class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
+  <div class="relative pb-[56.25%]">
+    <img src="<%= video.thumbnail %>" alt="<%= video.title %>" class="absolute inset-0 w-full h-full object-cover">
+  </div>
+  <div class="p-4">
+    <h3 class="text-lg font-semibold text-gray-900 truncate"><%= video.title %></h3>
+    <div class="mt-2 flex items-center text-sm text-gray-500">
+      <%= render partial: "icons/user" %>
+      Shared by <%= video.user.email %>
+    </div>
+    <div class="mt-4 flex justify-between items-center relative">
+      <%= link_to video.url, target: '_blank',
+        class: 'inline-flex items-center px-3 py-2 border border-transparent
+          text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600
+          hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500' do %>
+        Watch on YouTube
+        <%= render partial: 'icons/arrow-right' %>
+      <% end %>
+      <%= content_tag :div, style: 'background-color: #F71656;',
+        class: 'text-xs px-3 py-3 font-semibold rounded-md shadow-lg text-white' do %>
+          <%= video.video_type.capitalize %>
+      <% end %>
+
+    </div>
+  </div>
+</div>
