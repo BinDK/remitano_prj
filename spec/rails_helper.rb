@@ -8,6 +8,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 # that will avoid rails generators crashing because migrations haven't been run yet
 # return unless Rails.env.test?
 require 'rspec/rails'
+require 'open-uri'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -73,6 +74,22 @@ RSpec.configure do |config|
 
   # Include Devise test helpers
   config.include Devise::Test::IntegrationHelpers, type: :request
+
+  # Global mock for URI.open to prevent external HTTP requests during tests
+  config.before(:each) do
+    mock_html = <<-HTML
+      <html>
+        <head>
+          <meta property="og:title" content="Test Video Title" />
+          <meta property="og:image" content="https://example.com/test-thumbnail.jpg" />
+        </head>
+      </html>
+    HTML
+
+    allow(URI).to receive(:open).with(any_args) do |url|
+      StringIO.new(mock_html)
+    end
+  end
 end
 
 Shoulda::Matchers.configure do |config|
