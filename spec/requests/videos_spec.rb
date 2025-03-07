@@ -18,16 +18,12 @@ RSpec.describe 'Videos', type: :request do
     HTML
   end
 
-  before do
-    allow(URI).to receive(:open).with(any_args).and_return(StringIO.new(mocked_html))
-  end
-
   describe 'POST /videos' do
     context 'when user is logged in' do
       before { sign_in user }
 
       context 'with valid params' do
-        it 'creates a new YoutubeVideo and redirects to the videos index', focus: true do
+        it 'creates a new YoutubeVideo and redirects to the videos index' do
           expect {
             post videos_path, params: valid_attributes
           }.to change(YoutubeVideo, :count).by(1)
