@@ -102,26 +102,54 @@ RSpec.describe YoutubeVideoExtractor do
   end
 
   describe '#extract_video_info' do
-    it 'extracts the video title, thumbnail, and type' do
-      extractor = described_class.new(url: valid_youtube_url)
-      video_info = extractor.send(:extract_video_info)
+    context 'with a valid YouTube URL' do
+      before { allow(URI).to receive(:open).and_return(html) }
 
-      expect(video_info[:title]).to eq('Example Video Title')
-      expect(video_info[:thumbnail]).to eq('https://example.com/thumbnail.jpg')
-      expect(video_info[:video_type]).to eq('normal')
+      it 'extracts video metadata successfully' do
+        extractor = described_class.new(url: valid_youtube_url)
+        video_info = extractor.send(:extract_video_info)
+
+        expect(video_info[:title]).to eq('Example Video Title')
+        expect(video_info[:thumbnail]).to eq('https://example.com/thumbnail.jpg')
+        expect(video_info[:video_type]).to eq('normal')
+      end
+
+      context 'when og:title is Japanese' do
+        let(:title) { '日本語のビデオタイトル' }
+
+        it 'properly handles UTF-8 encoded titles' do
+          extractor = described_class.new(url: valid_youtube_url)
+          video_info = extractor.send(:extract_video_info)
+
+          expect(video_info[:title]).to eq('日本語のビデオタイトル')
+          expect(video_info[:thumbnail]).to eq('https://example.com/thumbnail.jpg')
+          expect(video_info[:video_type]).to eq('normal')
+        end
+      end
     end
 
-    it 'returns nil if the URL is invalid' do
-      extractor = described_class.new(url: invalid_url)
-      expect(extractor.send(:extract_video_info)).to be_nil
+    context 'when URL is invalid' do
+      it 'should returns nil' do
+        extractor = described_class.new(url: invalid_url)
+        expect(extractor.send(:extract_video_info)).to be_nil
+      end
     end
 
-    it 'logs an error and returns nil if an exception occurs' do
-      allow(URI).to receive(:open).and_raise(StandardError.new('Failed to open URL'))
+    context 'when network errors occur, or something else went wrong' do
+      before do
+        allow(URI).to receive(:open).and_raise(StandardError.new('Failed to open URL'))
+      end
 
-      extractor = described_class.new(url: valid_youtube_url)
-      expect(Rails.logger).to receive(:error).with(/Error extracting video info/)
-      expect(extractor.send(:extract_video_info)).to be_nil
+      it 'returns nil if the URL is invalid' do
+        extractor = described_class.new(url: invalid_url)
+        expect(extractor.send(:extract_video_info)).to be_nil
+      end
+
+      it 'logs an error and returns nil if an exception occurs' do
+        extractor = described_class.new(url: valid_youtube_url)
+        expect(Rails.logger).to receive(:error).with(/Error extracting video info/)
+        expect(extractor.send(:extract_video_info)).to be_nil
+      end
     end
   end
 end

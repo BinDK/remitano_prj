@@ -44,7 +44,11 @@ class YoutubeVideoExtractor
     return nil unless valid_youtube_url?
 
     begin
-      doc = Nokogiri::HTML(URI.open(url))
+      # binding.break
+      response = URI.open(url)
+      html_content = response.respond_to?(:read) ? response.read : response.to_s
+      html_content = html_content.force_encoding('UTF-8') if html_content.present?
+      doc = Nokogiri::HTML(html_content)
 
       title = doc.at('meta[property="og:title"]')&.attributes&.[]('content')&.value
       thumbnail = doc.at('meta[property="og:image"]')&.attributes&.[]('content')&.value
