@@ -11,15 +11,15 @@ class VideosController < ApplicationController
 
   def create
     @video = current_user.youtube_videos.build(youtube_video_params)
-    service = YoutubeVideoExtractor.new(url: @video.url, video: @video)
-    result = service.call
+    url = youtube_video_params[:url]
 
-    if result.success?
-      redirect_to videos_path, notice: 'Video was successfully shared!'
-    else
-      @video.errors.add(:base, result.message) if result.message
-      render :new, status: :unprocessable_entity
+    if url.present?
+      ProcessVideoJob.perform_later(url, current_user)
+      return redirect_to videos_path, notice: 'Video submitted and being processed!'
     end
+
+    @video.errors.add(:base, 'URL cannot be blank')
+    render :new, status: :unprocessable_entity
   end
 
   private
