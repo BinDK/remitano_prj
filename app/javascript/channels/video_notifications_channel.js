@@ -11,15 +11,26 @@ consumer.subscriptions.create("VideoNotificationsChannel", {
 
   received(data) {
     console.log("Received data:", data);
+    const currentUserMetaTag = document.querySelector('meta[name="current-user-id"]');
+    const currentUserId = currentUserMetaTag ? currentUserMetaTag.getAttribute('content') : null;
+
+    console.log("Current user:", currentUserId, "Creator:", data.current_user_id);
+
     if (data.type === 'new_video') {
-      const currentUserMetaTag = document.querySelector('meta[name="current-user-id"]');
-      const currentUserId = currentUserMetaTag ? currentUserMetaTag.getAttribute('content') : null;
-
-      console.log("Current user:", currentUserId, "Creator:", data.current_user_id);
-
       if (!currentUserId || currentUserId !== data.current_user_id.toString()) {
         this.appendNotification(data.html);
       }
+      this.appendCardToContainer(data.card);
+    }
+    else if (data.type === 'error') {
+      this.appendNotification(data.html);
+    }
+  },
+
+  appendCardToContainer(card) {
+    const videoContainer = document.getElementById('video-container');
+    if (videoContainer) {
+      videoContainer.insertAdjacentHTML('afterbegin', card);
     }
   },
 
