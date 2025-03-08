@@ -75,6 +75,9 @@ RSpec.configure do |config|
   # Include Devise test helpers
   config.include Devise::Test::IntegrationHelpers, type: :request
 
+  # Include ActiveJob test helpers
+  config.include ActiveJob::TestHelper
+
   # Global mock for URI.open to prevent external HTTP requests during tests
   config.before(:each) do
     mock_html = <<-HTML

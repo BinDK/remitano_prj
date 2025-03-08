@@ -1,0 +1,5 @@
+---
+:concurrency: <%= ENV['SIDEKIQ_MAX_THREADS'] || 1 %>
+:queues:
+  - high
+  - low
