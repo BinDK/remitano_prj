@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Videos', type: :request do
   let(:user) { create(:user) }
-  let(:valid_attributes) { { youtube_video: { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' } } }
-  let(:invalid_attributes) { { youtube_video: { url: 'invalid-url' } } }
+  let(:url) { 'https://www.youtube.com/watch?v=JQowMIY2bOw'}
+  let(:params) { { youtube_video: { url: } } }
 
   describe 'POST /videos' do
     context 'when user is logged in' do
@@ -12,8 +12,8 @@ RSpec.describe 'Videos', type: :request do
       context 'with valid params' do
         it 'should enqueues a ProcessVideoJob and redirects to the videos index reight away' do
           expect {
-            post videos_path, params: valid_attributes
-          }.to have_enqueued_job(ProcessVideoJob).with(valid_attributes[:youtube_video][:url], user)
+            post videos_path, params:
+          }.to have_enqueued_job(ProcessVideoJob).with(params[:youtube_video][:url], user)
 
           expect(response).to redirect_to(videos_path)
           follow_redirect!
@@ -22,11 +22,11 @@ RSpec.describe 'Videos', type: :request do
       end
 
       context 'with blank URL' do
-        it 'does not enqueue a job and re-renders the new template' do
-          blank_url_attributes = { youtube_video: { url: '' } }
+        let(:url) { '' }
 
+        it 'does not enqueue a job and re-renders the new template' do
           expect {
-            post videos_path, params: blank_url_attributes
+            post videos_path, params:
           }.not_to have_enqueued_job(ProcessVideoJob)
 
           expect(response).to have_http_status(:unprocessable_entity)
@@ -35,9 +35,11 @@ RSpec.describe 'Videos', type: :request do
       end
 
       context 'with invalid URL' do
+        let(:url) { 'invalid-url' }
+
         it 'enqueues a job to be validated in the background' do
           expect {
-            post videos_path, params: invalid_attributes
+            post videos_path, params:
           }.to have_enqueued_job(ProcessVideoJob)
 
           expect(response).to redirect_to(videos_path)
@@ -47,7 +49,8 @@ RSpec.describe 'Videos', type: :request do
 
     context 'when user is not logged in' do
       it 'redirects to the root path with an alert' do
-        post videos_path, params: valid_attributes
+        post videos_path, params: params
+
         expect(response).to redirect_to(root_path)
         follow_redirect!
         expect(response.body).to include('Please login or register to share videos')
