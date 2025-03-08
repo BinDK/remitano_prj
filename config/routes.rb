@@ -1,4 +1,9 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  # disable Sidekiq Web UI in production
+  mount Sidekiq::Web => '/sidekiq' if Rails.env.development?
+
   post 'users/sign_in_or_sign_up', to: 'users#sign_in_or_sign_up'
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
