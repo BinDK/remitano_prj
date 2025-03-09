@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe ProcessVideoJob, type: :job do
-  include ActiveJob::TestHelper
 
   let(:user) { create(:user) }
   let(:url) { 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }
@@ -12,7 +11,6 @@ RSpec.describe ProcessVideoJob, type: :job do
     allow(YoutubeVideoExtractor).to receive(:new).and_return(service_instance)
     allow(service_instance).to receive(:call).and_return(service_result)
     allow(service_result).to receive(:success?).and_return(true)
-    allow(ActionCable.server).to receive(:broadcast)
   end
 
   it 'should queues the job in the low queue' do
@@ -55,29 +53,58 @@ RSpec.describe ProcessVideoJob, type: :job do
       allow(ApplicationController.renderer).to receive(:render).and_return('<div>Error</div>')
     end
 
-    it 'broadcasts an error notification to the user channel' do
-      expect(ActionCable.server).to receive(:broadcast).with(
-        "video_notifications_user_#{user.id}",
-        {
-          type: 'error',
-          html: '<div>Error</div>',
-          current_user_id: user.id
-        }
-      )
+    context 'with rails client type' do
+      it 'broadcasts an error notification to the user channel with rendered partial' do
+        expect(ActionCable.server).to receive(:broadcast).with(
+          "video_notifications_user_#{user.id}",
+          {
+            type: 'error',
+            html: '<div>Error</div>',
+            client_type: 'rails',
+            current_user_id: user.id
+          }
+        )
 
-      perform_enqueued_jobs do
-        ProcessVideoJob.perform_later(url, user)
+        perform_enqueued_jobs do
+          ProcessVideoJob.perform_later(url, user)
+        end
+      end
+
+      it 'renders the notification partial with the error message' do
+        expect(ApplicationController.renderer).to receive(:render).with(
+          partial: 'videos/notification',
+          locals: { message: "Error processing video: #{error_message}", type: 'error' }
+        )
+
+        perform_enqueued_jobs do
+          ProcessVideoJob.perform_later(url, user)
+        end
       end
     end
 
-    it 'renders the notification partial with the error message' do
-      expect(ApplicationController.renderer).to receive(:render).with(
-        partial: 'videos/notification',
-        locals: { message: "Error processing video: #{error_message}", type: 'error' }
-      )
+    context 'with api client type' do
+      it 'also broadcasts an error notification to the specific user with error message' do
+        expect(ActionCable.server).to receive(:broadcast).with(
+          "video_notifications_user_#{user.id}",
+          {
+            type: 'error',
+            client_type: 'api',
+            error: error_message,
+            current_user_id: user.id
+          }
+        )
 
-      perform_enqueued_jobs do
-        ProcessVideoJob.perform_later(url, user)
+        perform_enqueued_jobs do
+          ProcessVideoJob.perform_later(url, user, client_type: 'api')
+        end
+      end
+
+      it 'does not render HTML notification for API client' do
+        expect(ApplicationController.renderer).not_to receive(:render)
+
+        perform_enqueued_jobs do
+          ProcessVideoJob.perform_later(url, user, client_type: 'api')
+        end
       end
     end
   end

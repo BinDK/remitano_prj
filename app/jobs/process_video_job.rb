@@ -1,7 +1,7 @@
 class ProcessVideoJob < ApplicationJob
   queue_as :low
 
-  def perform(url, user)
+  def perform(url, user, client_type: 'rails')
     video = user.youtube_videos.build
     video.url = url
 
@@ -10,19 +10,37 @@ class ProcessVideoJob < ApplicationJob
 
     unless result.success?
       error_message = result.message || 'An error occurred while processing your video'
-      html = ApplicationController.renderer.render(
-        partial: 'videos/notification',
-        locals: { message: "Error processing video: #{error_message}", type: 'error' }
-      )
+      return rails_views(error_message, client_type, user) if client_type == 'rails'
 
-      ActionCable.server.broadcast(
-        "video_notifications_user_#{user.id}",
-        {
-          type: 'error',
-          html:,
-          current_user_id: user.id
-        }
-      )
+      api_client(error_message, client_type, user)
     end
+  end
+
+  def api_client(error_message, client_type, user)
+    broadcasting(user, {
+      type: 'error',
+      client_type:,
+      error: error_message,
+      current_user_id: user.id
+    })
+  end
+
+  def rails_views(error_message, client_type, user)
+    html = ApplicationController.renderer.render(
+      partial: 'videos/notification',
+      locals: { message: "Error processing video: #{error_message}", type: 'error' }
+    )
+
+    broadcasting(user, {
+      type: 'error',
+      html:,
+      client_type:,
+      current_user_id: user.id
+    })
+  end
+
+  def broadcasting(user, payload)
+    ActionCable.server.broadcast(
+      "video_notifications_user_#{user.id}", payload)
   end
 end
