@@ -2,7 +2,7 @@ class VideosController < ApplicationController
   before_action :require_login, except: [:index]
 
   def index
-    @videos = YoutubeVideo.includes(:user).order(created_at: :desc)
+    @videos = YoutubeVideo.includes(:user).order(created_at: :desc).limit(10)
   end
 
   def new
