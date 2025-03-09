@@ -38,7 +38,8 @@ RSpec.describe YoutubeVideo, type: :model do
           type: 'new_video',
           html:,
           current_user_id: youtube_video.user.id,
-          card:
+          card:,
+          video: youtube_video.as_json(include: { user: { only: %i[id email] } })
         }
       )
 

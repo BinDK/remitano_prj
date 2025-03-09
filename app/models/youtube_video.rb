@@ -25,7 +25,8 @@ class YoutubeVideo < ApplicationRecord
       type: 'new_video',
       html:,
       current_user_id: user.id,
-      card:
+      card:,
+      video: self.as_json(include: { user: { only: %i[id email] } })
     })
   rescue StandardError => e
     Rails.logger.error "Broadcast failed: #{e.message}"
