@@ -6,6 +6,20 @@ Rails.application.routes.draw do
 
   post 'users/sign_in_or_sign_up', to: 'users#sign_in_or_sign_up'
   devise_for :users
+
+  namespace :api do
+    namespace :v1 do
+      resources :videos, only: [:index, :create]
+      resources :users, only: [] do
+        collection do
+          get :current
+          post :sign_in_or_sign_up
+          delete :logout
+        end
+      end
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   resources :videos, only: [:index, :new, :create]
 

@@ -23,7 +23,9 @@ consumer.subscriptions.create("VideoNotificationsChannel", {
       this.appendCardToContainer(data.card);
     }
     else if (data.type === 'error') {
-      this.appendNotification(data.html);
+      if (data.client_type === 'rails') {
+        this.appendNotification(data.html);
+      }
     }
   },
 
@@ -31,6 +33,11 @@ consumer.subscriptions.create("VideoNotificationsChannel", {
     const videoContainer = document.getElementById('video-container');
     if (videoContainer) {
       videoContainer.insertAdjacentHTML('afterbegin', card);
+
+      const videoCards = videoContainer.children;
+      if (videoCards.length > 10 && videoCards[10]) {
+        videoCards[10].remove();
+      }
     }
   },
 
