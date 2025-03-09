@@ -23,7 +23,9 @@ consumer.subscriptions.create("VideoNotificationsChannel", {
       this.appendCardToContainer(data.card);
     }
     else if (data.type === 'error') {
-      this.appendNotification(data.html);
+      if (data.client_type === 'rails') {
+        this.appendNotification(data.html);
+      }
     }
   },
 
