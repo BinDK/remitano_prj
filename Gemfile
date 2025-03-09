@@ -71,7 +71,6 @@ group :development do
   # gem "spring"
 end
 
-gem "devise", "~> 4.9"
-
-gem "nokogiri", "~> 1.18"
-
+gem 'devise', '~> 4.9'
+gem 'nokogiri', '~> 1.18'
+gem 'rack-cors', '~> 2.0'
