@@ -1,15 +1,8 @@
-<%
-  title = case type
-          when "error" then "Error"
-          else "New Video Shared!"
-          end
-%>
-
 <div class="fixed top-5 right-5 p-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 z-50" onclick="this.remove()">
   <div class="flex items-center justify-between">
     <div class="flex items-center space-x-3 rtl:space-x-reverse">
       <div>
-        <p class="text-sm font-bold text-gray-900 dark:text-white"><%= title %></p>
+        <p class="text-sm font-bold text-black-900"><%= type == 'error' ? 'Error' : 'New Video Shared!' %></p>
         <p class="text-sm font-normal">
           <%= message %>
         </p>

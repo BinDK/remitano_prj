@@ -10,9 +10,11 @@ class ProcessVideoJob < ApplicationJob
 
     unless result.success?
       error_message = result.message || 'An error occurred while processing your video'
-      return rails_views(error_message, client_type, user) if client_type == 'rails'
-
-      api_client(error_message, client_type, user)
+      if client_type == 'rails'
+        rails_views(error_message, client_type, user)
+      else
+        api_client(error_message, client_type, user)
+      end
     end
   end
 
