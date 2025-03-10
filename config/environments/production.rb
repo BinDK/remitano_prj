@@ -40,6 +40,7 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Mount Action Cable outside main process or domain.
+  config.action_cable.mount_path = ENV.fetch('ACTION_CABLE_MOUNT_PATH', '/cable')
   config.action_cable.url = ENV['ACTION_CABLE_URL'] if ENV['ACTION_CABLE_URL'].present?
   if ENV['ACTION_CABLE_ALLOWED_ORIGINS'].present?
     config.action_cable.allowed_request_origins = ENV.fetch('ACTION_CABLE_ALLOWED_ORIGINS', '').split(',').map(&:strip)
