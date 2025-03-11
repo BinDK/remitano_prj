@@ -42,7 +42,10 @@ Rails.application.configure do
   # Mount Action Cable outside main process or domain.
   config.action_cable.mount_path = ENV.fetch('ACTION_CABLE_MOUNT_PATH', '/cable')
   config.action_cable.url = ENV['ACTION_CABLE_URL'] if ENV['ACTION_CABLE_URL'].present?
-  if ENV['ACTION_CABLE_ALLOWED_ORIGINS'].present?
+  # Allow connections from anywhere if verification is disabled
+  if ENV['DISABLE_ACTION_CABLE_VERIFICATION'] == 'true'
+    config.action_cable.disable_request_forgery_protection = true
+  elsif ENV['ACTION_CABLE_ALLOWED_ORIGINS'].present?
     config.action_cable.allowed_request_origins = ENV.fetch('ACTION_CABLE_ALLOWED_ORIGINS', '').split(',').map(&:strip)
   end
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
