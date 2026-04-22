@@ -14,5 +14,5 @@ Rails.application.config.assets.paths << Rails.root.join("app/javascript")
 Rails.application.config.assets.precompile += %w[
   channels/index.js
   channels/consumer.js
-  channels/video_notificatios_channel.js
+  channels/video_notifications_channel.js
 ]
